@@ -31,7 +31,7 @@ def analyze_spark_workflow(df: pd.DataFrame) -> Dict:
     }
 
 def plot_spark_analysis(df: pd.DataFrame, title: str, output_path: Path):
- """Plot Spark analysis """
+    """Plot Spark analysis """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     if 'label' in df.columns:
