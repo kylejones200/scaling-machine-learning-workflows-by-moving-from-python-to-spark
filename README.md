@@ -1,13 +1,45 @@
 # Scaling Machine Learning Workflows by Moving from Python to Spark
 
-**Published:** 2025-05-14
-**Medium:** [https://medium.com/@kyle-t-jones/scaling-machine-learning-workflows-by-moving-from-python-to-spark-e5294640376a](https://medium.com/@kyle-t-jones/scaling-machine-learning-workflows-by-moving-from-python-to-spark-e5294640376a)
+This project demonstrates scaling machine learning workflows using Apache Spark.
 
-## About
+## Article
 
-Place the code for this article in this repository.
-The original article export is saved as `article.md`.
+Medium article: [Scaling Machine Learning Workflows by Moving from Python to Spark](https://medium.com/@kylejones_47003/scalingmlwithspark)
 
-## Files
+## Project Structure
 
-Add your `.ipynb`, `.py`, `.yaml`, `.js`, `.ts`, or other project files here.
+```
+.
+├── README.md           # This file
+├── main.py            # Main entry point
+├── config.yaml        # Configuration file
+├── requirements.txt   # Python dependencies
+├── src/               # Core functions
+│   ├── core.py        # Spark ML functions
+│   └── plotting.py    # Tufte-style plotting utilities
+├── tests/             # Unit tests
+├── data/              # Data files
+└── images/            # Generated plots and figures
+```
+
+## Configuration
+
+Edit `config.yaml` to customize:
+- Data source or synthetic generation
+- Dataset size (samples, features)
+- Spark configuration
+- Output settings
+
+## Spark ML Features
+
+Spark capabilities:
+- **Distributed Processing**: Handle large datasets
+- **MLlib**: Machine learning library
+- **Vector Assembler**: Feature preparation
+- **Scalable Algorithms**: Logistic regression, etc.
+
+## Caveats
+
+- By default, generates synthetic large dataset.
+- Full Spark implementation requires Spark cluster setup.
+- PySpark requires Java runtime environment.
