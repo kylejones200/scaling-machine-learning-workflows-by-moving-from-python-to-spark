@@ -1,49 +1,34 @@
+---
+author: "Kyle Jones"
+date_published: "May 14, 2025"
+date_exported_from_medium: "November 10, 2025"
+canonical_link: "https://medium.com/@kyle-t-jones/scaling-machine-learning-workflows-by-moving-from-python-to-spark-e5294640376a"
+---
+
 # Scaling Machine Learning Workflows by Moving from Python to Spark How to convert your scikit-learn pipelines to PySpark for faster,
 distributed ML
 
 ### Scaling Machine Learning Workflows by Moving from Python to Spark
 #### How to convert your scikit-learn pipelines to PySpark for faster, distributed ML
-Python is slow. For data scientists or business analysts doing one
-experiment at a time, that slowness doesn't matter. And it is easy to
-trade some time for the benefit of easy use and plentiful analytics
-libraries like scikit-learn and pandas.
+Python is slow. For data scientists or business analysts doing one experiment at a time, that slowness doesn't matter. And it is easy to trade some time for the benefit of easy use and plentiful analytics libraries like scikit-learn and pandas.
 
 The problems with Python start to show when you try to scale AI/ML.
 
-Apache Spark is a distributed computing framework designed for
-distributed data processing and ML. It allows you to write code once and
-run it anywhere --- on your laptop, a cloud cluster, or inside a managed
-platform like Databricks. Spark's MLlib package implements many of the
-common algorithms in sci-kit learn, but does so in a way designed for
-horizontal scalability (ie using more machines).
+Apache Spark is a distributed computing framework designed for distributed data processing and ML. It allows you to write code once and run it anywhere --- on your laptop, a cloud cluster, or inside a managed platform like Databricks. Spark's MLlib package implements many of the common algorithms in sci-kit learn, but does so in a way designed for horizontal scalability (ie using more machines).
 
-Cool idea. But if your code is all in Python, the fact that Spark is
-faster doesn't really help you.
+Cool idea. But if your code is all in Python, the fact that Spark is faster doesn't really help you.
 
-My goal in this article is to show how you can easily migrate ML
-pipelines written in Python to Spark using PySpark.
+My goal in this article is to show how you can easily migrate ML pipelines written in Python to Spark using PySpark.
 
 #### Apache Spark MLlib
-Apache Spark is a fault-tolerante, memory aware distributed data
-processing engine. Spark processes data using a directed acyclic graph
-(DAG) of tasks which optimizes execution plans for performance.
+Apache Spark is a fault-tolerante, memory aware distributed data processing engine. Spark processes data using a directed acyclic graph (DAG) of tasks which optimizes execution plans for performance.
 
-Spark MLlib is the ML library that builds on Spark's DataFrame API and
-can perform things like linear regression, logistic regression, decision
-trees, and clustering. Scikit-learn is based on NumPy arrays. Spark
-MLlib uses Spark DataFrames which are a column of feature vectors. That
-change lets MLlib do automatic optimization, lazy evaluation, and
-parallel processing.
+Spark MLlib is the ML library that builds on Spark's DataFrame API and can perform things like linear regression, logistic regression, decision trees, and clustering. Scikit-learn is based on NumPy arrays. Spark MLlib uses Spark DataFrames which are a column of feature vectors. That change lets MLlib do automatic optimization, lazy evaluation, and parallel processing.
 
-Spark MLlib focuses on immutability, pipeline composition, and
-scalability. The pipeline includes all preprocessing and modeling steps,
-then fits the entire pipeline at once. This approach closely mirrors
-scikit-learn's `Pipeline` API but is
-optimized for distributed data (meaning it is faster).
+Spark MLlib focuses on immutability, pipeline composition, and scalability. The pipeline includes all preprocessing and modeling steps, then fits the entire pipeline at once. This approach closely mirrors scikit-learn's `Pipeline` API but is optimized for distributed data (meaning it is faster).
 
 ### Setting Up Spark with PySpark
-To get started with PySpark, you'll need to install it and initialize a
-Spark session. On most machines:
+To get started with PySpark, you'll need to install it and initialize a Spark session. On most machines:
 
 ``` 
 pip install pyspark
@@ -59,8 +44,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 ```
 
-Once initialized, Spark provides access to DataFrame APIs similar to
-pandas, but with distributed backend execution.
+Once initialized, Spark provides access to DataFrame APIs similar to pandas, but with distributed backend execution.
 
 You can read data using:
 
@@ -70,8 +54,7 @@ df.printSchema()
 df.show(5)
 ```
 
-Always check the schema and confirm that numeric columns were
-interpreted correctly. String columns will need to be indexed for MLlib.
+Always check the schema and confirm that numeric columns were interpreted correctly. String columns will need to be indexed for MLlib.
 
 ### Converting Python DataFrames to Spark
 If you're starting with a pandas DataFrame, you can convert it:
@@ -84,17 +67,13 @@ pandas_df = pd.read_csv("data.csv")
 spark_df = spark.createDataFrame(pandas_df)
 ```
 
-Watch out for mixed data types. Spark prefers clearly typed columns:
-strings, integers, doubles, booleans. You need to deal with nulls
-explicitly:
+Watch out for mixed data types. Spark prefers clearly typed columns: strings, integers, doubles, booleans. You need to deal with nulls explicitly:
 
 ``` 
 spark_df = spark_df.na.fill(0)  # or use dropna()
 ```
 
-For machine learning, all features must be numeric and assembled into a
-single vector column. This differs from scikit-learn, where the model
-can accept multiple numeric columns directly.
+For machine learning, all features must be numeric and assembled into a single vector column. This differs from scikit-learn, where the model can accept multiple numeric columns directly.
 
 ### Rewriting ML Pipelines in Spark
 In scikit-learn, you might write:
@@ -197,8 +176,7 @@ crossval = CrossValidator(estimator=pipeline,
 cvModel = crossval.fit(train_data)
 ```
 
-To use Spark Streaming with ML, you can ingest live data and apply a
-trained model:
+To use Spark Streaming with ML, you can ingest live data and apply a trained model:
 
 ``` 
 stream = spark.readStream.format("csv").option("path", "live_data/").load()
@@ -206,35 +184,17 @@ predictions = cvModel.transform(stream)
 ```
 
 ### When Not to Use Spark for ML
-Spark introduces complexity. Scikit-learn may be better if your data
-fits in memory or your model needs interpretability,. Custom algorithms,
-such as deep learning with PyTorch or complex ensemble models, are also
-better handled outside Spark.
+Spark introduces complexity. Scikit-learn may be better if your data fits in memory or your model needs interpretability,. Custom algorithms, such as deep learning with PyTorch or complex ensemble models, are also better handled outside Spark.
 
-Spark MLlib supports only a subset of commonly used models. If you need
-flexible architectures, transfer learning, or neural nets, Spark won't
-be ideal.
+Spark MLlib supports only a subset of commonly used models. If you need flexible architectures, transfer learning, or neural nets, Spark won't be ideal.
 
-Here are the results from a binary classificication of 40,000 oil wells
-in North Dakota. The dataset has 1,932,995 and is 438MBs as a CSV file.
+Here are the results from a binary classificication of 40,000 oil wells in North Dakota. The dataset has 1,932,995 and is 438MBs as a CSV file.
 
 
 The dataset is too small to get the value of spark.
 
-Migrating ML from Python to Spark helps when your data becomes too large
-to handle on a single machine. Spark MLlib supports many familiar
-algorithms and offers a clean way to express full pipelines at scale.
+Migrating ML from Python to Spark helps when your data becomes too large to handle on a single machine. Spark MLlib supports many familiar algorithms and offers a clean way to express full pipelines at scale.
 
-The tradeoff is setup complexity and the need to use Spark's API, which
-differs from the scikit-learn idioms you're used to. However, the
-performance gains for large data make it worthwhile.
+The tradeoff is setup complexity and the need to use Spark's API, which differs from the scikit-learn idioms you're used to. However, the performance gains for large data make it worthwhile.
 
-Databricks, AWS Glue, and MLflow are better tools than Colab for
-production-ready pipelines with Spark.
-::::::::By [Kyle Jones](https://medium.com/@kyle-t-jones) on
-[May 14, 2025](https://medium.com/p/e5294640376a).
-
-[Canonical
-link](https://medium.com/@kyle-t-jones/scaling-machine-learning-workflows-by-moving-from-python-to-spark-e5294640376a)
-
-Exported from [Medium](https://medium.com) on November 10, 2025.
+Databricks, AWS Glue, and MLflow are better tools than Colab for production-ready pipelines with Spark.
