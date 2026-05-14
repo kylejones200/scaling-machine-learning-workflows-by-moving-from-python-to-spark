@@ -33,10 +33,10 @@ Edit `config.yaml` to customize:
 ## Spark ML Features
 
 Spark capabilities:
-- **Distributed Processing**: Handle large datasets
-- **MLlib**: Machine learning library
-- **Vector Assembler**: Feature preparation
-- **Scalable Algorithms**: Logistic regression, etc.
+- Distributed Processing: Handle large datasets
+- MLlib: Machine learning library
+- Vector Assembler: Feature preparation
+- Scalable Algorithms: Logistic regression, etc.
 
 ## Caveats
 
