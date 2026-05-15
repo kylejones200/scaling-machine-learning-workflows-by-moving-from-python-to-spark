@@ -3,7 +3,6 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict
 import matplotlib.pyplot as plt
 import logging
 
@@ -21,7 +20,7 @@ def simulate_large_dataset(n_samples: int = 10000, n_features: int = 10, seed: i
     df['label'] = target
     return df
 
-def analyze_spark_workflow(df: pd.DataFrame) -> Dict:
+def analyze_spark_workflow(df: pd.DataFrame) -> dict:
     """Analyze Spark workflow characteristics."""
     return {
         'n_samples': len(df),
