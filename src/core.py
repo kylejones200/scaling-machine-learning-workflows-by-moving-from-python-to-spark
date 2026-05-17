@@ -39,33 +39,35 @@ def plot_spark_analysis(
     df: pd.DataFrame, title: str, output_path: Path, plot: bool = False
 ):
     """Plot Spark analysis"""
-    if plot:
-        fig, ax = plt.subplots(figsize=(10, 6))
+    if not plot:
+        return
 
-        if "label" in df.columns:
-            label_counts = df["label"].value_counts()
-            ax.bar(
-                range(len(label_counts)),
-                label_counts.values,
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    if "label" in df.columns:
+        label_counts = df["label"].value_counts()
+        ax.bar(
+            range(len(label_counts)),
+            label_counts.values,
+            color="#4A90A4",
+            alpha=0.7,
+            edgecolor="none",
+        )
+        ax.set_xticks(range(len(label_counts)))
+        ax.set_xticklabels(label_counts.index)
+    else:
+        numeric_cols = df.select_dtypes(include=[np.number]).columns
+        if len(numeric_cols) > 0:
+            ax.hist(
+                df[numeric_cols[0]].values,
+                bins=30,
                 color="#4A90A4",
                 alpha=0.7,
                 edgecolor="none",
             )
-            ax.set_xticks(range(len(label_counts)))
-            ax.set_xticklabels(label_counts.index)
-        else:
-            numeric_cols = df.select_dtypes(include=[np.number]).columns
-            if len(numeric_cols) > 0:
-                ax.hist(
-                    df[numeric_cols[0]].values,
-                    bins=30,
-                    color="#4A90A4",
-                    alpha=0.7,
-                    edgecolor="none",
-                )
 
-        ax.set_xlabel("Value")
-        ax.set_ylabel("Frequency")
+    ax.set_xlabel("Value")
+    ax.set_ylabel("Frequency")
 
-        plt.savefig(output_path, dpi=100, bbox_inches="tight")
-        plt.close()
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()

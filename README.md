@@ -43,3 +43,11 @@ Spark capabilities:
 - By default, generates synthetic large dataset.
 - Full Spark implementation requires Spark cluster setup.
 - PySpark requires Java runtime environment.
+
+## Disclaimer
+
+Educational/demo code only. Not financial, safety, or engineering advice. Use at your own risk. Verify results independently before any production or operational use.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
