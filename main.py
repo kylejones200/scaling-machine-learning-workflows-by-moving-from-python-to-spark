@@ -17,7 +17,7 @@ logging.basicConfig(
 )
 
 
-def load_config(config_path: Path = None) -> dict:
+def load_config(config_path: Path | None = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
         config_path = Path(__file__).parent / "config.yaml"
@@ -36,7 +36,6 @@ def main():
         "--output-dir", type=Path, default=None, help="Output directory"
     )
     args = parser.parse_args()
-
     config = load_config(args.config)
     output_dir = (
         Path(args.output_dir)
@@ -44,7 +43,6 @@ def main():
         else Path(config["output"]["figures_dir"])
     )
     output_dir.mkdir(exist_ok=True)
-
     if args.data_path and args.data_path.exists():
         df = pd.read_csv(args.data_path)
     elif config["data"]["source"] and Path(config["data"]["source"]).exists():
@@ -61,13 +59,11 @@ def main():
 
     logging.info("Analyzing Spark workflow...")
     analysis = analyze_spark_workflow(df)
-
     logging.info("Dataset Analysis:")
     logging.info(f"Number of samples: {analysis['n_samples']:,}")
     logging.info(f"Number of features: {analysis['n_features']}")
     logging.info(f"Memory usage: {analysis['memory_usage_mb']:.2f} MB")
     logging.info(f"Suitable for Spark: {analysis['spark_suitable']}")
-
     if config["spark"]["use_spark"]:
         logging.info("Note: Full Spark implementation would use:")
         logging.info("  from pyspark.sql import SparkSession")
@@ -80,7 +76,6 @@ def main():
     plot_spark_analysis(
         df, "Spark ML Scaling Analysis", output_dir / "spark_analysis.png"
     )
-
     logging.info(f"Analysis complete. Figures saved to {output_dir}")
 
 
